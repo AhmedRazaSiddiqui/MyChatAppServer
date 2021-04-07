@@ -12,14 +12,19 @@ userRouter.post("/User/:Name", async (req, res) => {
   res.send(a);
 });
 userRouter.post("/createUser", async (req, res) => {
-  const NewUser = new UserModal({
-    name: req.body.name,
-    username: req.body.username,
-    email: req.body.email,
-    phone: req.body.phone,
-  });
-  let a = await NewUser.save();
-  res.send(a);
+  let isUserAlreadyExits = await UserModal.find({ name: req.params.Name });
+  if (isUserAlreadyExits) {
+    res.send({ error: "user Alrady Exits" });
+  } else {
+    const NewUser = new UserModal({
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
+      phone: req.body.phone,
+    });
+    let a = await NewUser.save();
+    res.send(a);
+  }
 });
 
 module.exports = userRouter;
